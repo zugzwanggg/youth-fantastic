@@ -132,7 +132,7 @@ export const isLogged = async (req, res) => {
     });
   } catch (error) {
     console.log("Error occured at isLogged():", error);
-    res.status(500).send(error);
+    return res.status(500).send(error);
   }
 };
 
