@@ -41,7 +41,7 @@ CREATE TABLE group_buy_pools (
 CREATE TABLE group_buy_commitments (
     id SERIAL PRIMARY KEY,
     pool_id INT REFERENCES group_buy_pools(id),
+    business_id INT REFERENCES users(id),
     supplier_id INT REFERENCES users(id),
-    qty INT NOT NULL,
     created_at TIMESTAMP DEFAULT now()
 );
