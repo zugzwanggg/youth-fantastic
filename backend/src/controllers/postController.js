@@ -216,6 +216,7 @@ export const joinPool = async (req, res) => {
 
 export const createOrder = async (req, res) => {
   try {
+    const { id } = req.user;
     const { commitment_id, product_owner_id, product_id } = req.body;
 
     if (!commitment_id || !product_owner_id || !product_id) {
@@ -225,9 +226,9 @@ export const createOrder = async (req, res) => {
     }
 
     const dbQuery = await db.query(
-      `INSERT INTO orders (commitment_id, product_owner_id, product_id)
-        VALUES ($1, $2, $3)`,
-      [commitment_id, product_owner_id, product_id]
+      `INSERT INTO orders (order_owner_id, commitment_id, product_owner_id, product_id)
+        VALUES ($1, $2, $3, $4)`,
+      [id, commitment_id, product_owner_id, product_id]
     );
 
     return res.status(200).send({
@@ -236,5 +237,48 @@ export const createOrder = async (req, res) => {
   } catch (error) {
     console.log(`Error occured at createOrder(): ${error}`);
     return res.status(200).send(error);
+  }
+};
+
+export const editOrderStatus = async (req, res) => {
+  try {
+    const { order_id } = req.params;
+    const { order_status } = req.body;
+
+    console.log(order_id, order_status);
+
+    if (!order_status) {
+      return res.status(400).send({
+        message: "Fields cannot be empty!",
+      });
+    }
+
+    const dbQuery = await db.query(`UPDATE orders SET status=$1 WHERE id=$2`, [
+      order_status,
+      order_id,
+    ]);
+
+    return res.status(200).send({
+      message: "Successfully changed order status",
+    });
+  } catch (error) {
+    console.log(`Error occured at editOrderStatus(): ${error}`);
+    return res.status(500).send(error);
+  }
+};
+
+export const getOrdersByUserID = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+
+    const dbQuery = await db.query(
+      `SELECT * FROM orders WHERE order_owner_id=$1`,
+      [user_id]
+    );
+
+    return res.status(200).send(dbQuery.rows);
+  } catch (error) {
+    console.log(`Error occured at getOrdersByUserID(): ${error}`);
+    return res.status(500).send(error);
   }
 };

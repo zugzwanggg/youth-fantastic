@@ -3,8 +3,10 @@ import {
   createOrder,
   createPool,
   createProduct,
+  editOrderStatus,
   editPoolStatus,
   getCategories,
+  getOrdersByUserID,
   getPools,
   getProductByProductId,
   getProducts,
@@ -18,6 +20,7 @@ import { uploadImage } from "../middleware/uploadImage.js";
 export const postRouter = Router();
 
 postRouter.patch("/editpool/:pool_id", checkAuth, editPoolStatus);
+postRouter.patch("/edit_order/:order_id", checkAuth, editOrderStatus);
 postRouter.post(
   "/product_create",
   checkAuth,
@@ -33,3 +36,4 @@ postRouter.get("/getproducts", getProducts);
 postRouter.get("/getproducts/:category_id", getProductsByCategory);
 postRouter.get("/product/:product_id", getProductByProductId);
 postRouter.get("/user_products/:user_id", getProductsByUserId);
+postRouter.get("/user/get_orders/:user_id", getOrdersByUserID);

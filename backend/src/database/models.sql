@@ -49,6 +49,7 @@ CREATE TABLE group_buy_commitments (
 
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
+    order_owner_id INT REFERENCES users(id),
     commitment_id INT REFERENCES group_buy_commitments(id),
     product_owner_id INT REFERENCES users(id),
     product_id INT REFERENCES products(id),
