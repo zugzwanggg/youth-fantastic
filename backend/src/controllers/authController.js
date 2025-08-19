@@ -6,9 +6,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "best_secret_2025";
 
 export const register = async (req, res) => {
   try {
-    const { email, username, password, repPassword } = req.body;
+    const { email, name, password, repPassword, user_type } = req.body;
 
-    if (!email || !username || !password || !repPassword) {
+    if (!email || !name || !password || !repPassword) {
       return res.status(400).json({
         message: "Fields cannot be empty!",
       });
@@ -34,8 +34,8 @@ export const register = async (req, res) => {
     const hashPassword = await bcryptjs.hash(password, genSalt);
 
     const newUser = await db.query(
-      "INSERT INTO users (email, username, password, uuid) VALUES ($1, $2, $3, uuid_generate_v4()) RETURNING id, email, username, created_at",
-      [email, username, hashPassword]
+      "INSERT INTO users (email, name, password, user_type) VALUES ($1, $2, $3, $4) RETURNING id, email, name, user_type, created_at",
+      [email, name, hashPassword, user_type]
     );
 
     const payload = newUser.rows[0];
@@ -78,7 +78,7 @@ export const login = async (req, res) => {
 
     if (checkUser.rows.length <= 0) {
       return res.status(401).json({
-        message: "Incorrect username/email or password!",
+        message: "Incorrect email or password!",
       });
     }
 
@@ -89,7 +89,7 @@ export const login = async (req, res) => {
 
     if (!checkUserPassword) {
       return res.status(401).json({
-        message: "Incorrect username/email or password!",
+        message: "Incorrect email or password!",
       });
     }
 

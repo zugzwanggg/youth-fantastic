@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import { authRouter } from "./routes/authRouter.js";
 import { userRouter } from "./routes/userRouter.js";
+import { postRouter } from "./routes/postRouter.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(cors(corsOptions));
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/post", postRouter);
 
 const PORT = process.env.BACKEND_PORT || 8080;
 
