@@ -213,3 +213,28 @@ export const joinPool = async (req, res) => {
     return res.status(500).send(error);
   }
 };
+
+export const createOrder = async (req, res) => {
+  try {
+    const { commitment_id, product_owner_id, product_id } = req.body;
+
+    if (!commitment_id || !product_owner_id || !product_id) {
+      return res.status(400).send({
+        message: "Fields cannot be empty",
+      });
+    }
+
+    const dbQuery = await db.query(
+      `INSERT INTO orders (commitment_id, product_owner_id, product_id)
+        VALUES ($1, $2, $3)`,
+      [commitment_id, product_owner_id, product_id]
+    );
+
+    return res.status(200).send({
+      message: "Successfully placed an order",
+    });
+  } catch (error) {
+    console.log(`Error occured at createOrder(): ${error}`);
+    return res.status(200).send(error);
+  }
+};

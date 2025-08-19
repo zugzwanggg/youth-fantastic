@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  createOrder,
   createPool,
   createProduct,
   editPoolStatus,
@@ -25,6 +26,7 @@ postRouter.post(
 );
 postRouter.post("/create_pool", checkAuth, createPool);
 postRouter.post("/join_pool", checkAuth, joinPool);
+postRouter.post("/create_order", checkAuth, createOrder);
 postRouter.get("/getpools", getPools);
 postRouter.get("/getcategories", getCategories);
 postRouter.get("/getproducts", getProducts);

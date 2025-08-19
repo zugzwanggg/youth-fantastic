@@ -1,5 +1,6 @@
 CREATE TYPE user_role AS ENUM ('admin', 'supplier', 'business');
 CREATE TYPE pool_status AS ENUM ('open', 'filled', 'expired', 'cancelled');
+CREATE TYPE order_status AS ENUM ('in_delivery', 'shipped', 'cancelled');
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -43,5 +44,14 @@ CREATE TABLE group_buy_commitments (
     pool_id INT REFERENCES group_buy_pools(id),
     business_id INT REFERENCES users(id),
     supplier_id INT REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    commitment_id INT REFERENCES group_buy_commitments(id),
+    product_owner_id INT REFERENCES users(id),
+    product_id INT REFERENCES products(id),
+    status order_status NOT NULL DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT now()
 );
